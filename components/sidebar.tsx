@@ -1,62 +1,4 @@
 
-// "use client";
-
-// import {
-//   LayoutDashboard,
-//   Users,
-//   CreditCard,
-//   FileText,
-//   PiggyBank,
-//   Wallet,
-//   Settings,
-//   Bell,
-//   Folder,
-//   Building2,
-// } from "lucide-react";
-
-// const menu = [
-//   { label: "Dashboard", icon: LayoutDashboard },
-//   { label: "Members", icon: Users },
-//   { label: "Loans", icon: CreditCard },
-//   { label: "Accounting", icon: Wallet },
-//   { label: "Reports", icon: FileText },
-//   { label: "Savings", icon: PiggyBank },
-//   { label: "Collections", icon: Folder },
-//   { label: "Staff Management", icon: Users },
-//   { label: "Branch Management", icon: Building2 },
-//   { label: "Notifications", icon: Bell },
-//   { label: "Documents", icon: FileText },
-// ];
-
-// export default function Sidebar() {
-//   return (
-//     <aside className="fixed left-0 top-0 h-screen w-72 bg-white border-r shadow-sm flex flex-col">
-//       {/* Logo */}
-//       <div className="px-6 py-5 border-b">
-//         <h1 className="text-xl font-bold text-blue-700">
-//           Admin Console
-//         </h1>
-//         <p className="text-xs text-gray-500">Regional HQ</p>
-//       </div>
-
-//       {/* Menu */}
-//       <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-//         {menu.map((item, idx) => {
-//           const Icon = item.icon;
-//           return (
-//             <div
-//               key={idx}
-//               className="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-600 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition"
-//             >
-//               <Icon size={18} />
-//               <span className="text-sm font-medium">{item.label}</span>
-//             </div>
-//           );
-//         })}
-//       </nav>
-//     </aside>
-//   );
-// }
 "use client"
 
 import Link from "next/link"
@@ -73,16 +15,16 @@ import {
 } from "lucide-react"
 
 const menu = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/" },
+  { label: "Dashboard", icon: LayoutDashboard, href: "/DashboardOverview" },
   { label: "Members", icon: Users, href: "/members" },
   { label: "Loans", icon: CreditCard, href: "/loans" },
   { label: "Accounting", icon: Wallet, href: "/accounting" },
   { label: "Reports", icon: FileText, href: "/reports" },
-  { label: "Savings", icon: PiggyBank, href: "/savings" },
-  { label: "Collections", icon: Folder, href: "/collections" },
-  { label: "Staff Management", icon: Users, href: "/staff-management" },
-  { label: "Branch Management", icon: Building2, href: "/branches" },
-  { label: "Notifications", icon: Bell, href: "/notifications" },
+  { label: "Savings", icon: PiggyBank, href: "/SavingsManagement" },
+  { label: "Collections", icon: Folder, href: "/CollectionManagement" },
+  { label: "Staff Management", icon: Users, href: "/StaffManagement" },
+  { label: "Branch Management", icon: Building2, href: "/BranchCenterManagement" },
+  { label: "Notifications", icon: Bell, href: "/DigitalVault" },
   { label: "Documents", icon: FileText, href: "/documents" },
 ]
 
