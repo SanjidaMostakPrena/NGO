@@ -42,7 +42,7 @@ export default function DashboardLayout({
         </div>
 
         {/* PAGE CONTENT */}
-        <div className="p-6 bg-[#f5f7fb] min-h-screen">
+        <div className="p-6 bg-blue-800 min-h-screen">
           {children}
         </div>
       </div>

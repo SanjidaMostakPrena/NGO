@@ -91,7 +91,7 @@ const NotificationsManagement = () => {
   });
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen p-6 font-sans text-slate-800">
+    <div className="bg-secondary min-h-screen p-6 font-sans text-slate-800">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>

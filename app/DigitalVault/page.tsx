@@ -47,7 +47,7 @@ const DigitalVault = () => {
   ];
 
   return (
-    <div className="bg-[#f8fafc] min-h-screen p-6 font-sans text-slate-800">
+    <div className="bg-secondary min-h-screen p-6 font-sans text-slate-800">
       
       {/* ================= HEADER SECTION ================= */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
