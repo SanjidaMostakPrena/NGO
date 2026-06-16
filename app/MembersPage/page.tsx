@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   UserPlus, 
   Search, 
@@ -19,29 +20,19 @@ import {
   Wallet
 } from 'lucide-react';
 
-// TypeScript Interface for Member Data
-interface Member {
-  id: string;
-  name: string;
-  initial: string;
-  spouseName: string;
-  phone: string;
-  center: string;
-  branch: string;
-  joinDate: string;
-  loanStatus: string;
-  savingsBalance: string;
-  status: 'সক্রিয়' | 'নিষ্ক্রিয়' | 'বকেয়া';
-  statusType: 'active' | 'inactive' | 'due';
-}
 
-const MembersPage = () => {
+
+import { initialMembersData, Member } from '../../membersData';
+
+
+// TypeScript Interface for Member Data
+
+
+export default function MembersPage() {
+  const router = useRouter();
+  
   // Modal Open/Close State for Adding Member
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  // View Details Modal States
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   
   // Edit Modal States
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -76,15 +67,10 @@ const MembersPage = () => {
     statusType: 'active' as const
   });
 
-  // Mock Data: Initial Members Dataset matching your NGO layout
-  const [members, setMembers] = useState<Member[]>([
-    { id: 'M-৮৮৯২', name: 'রাশেদ আহমেদ', initial: 'রা', spouseName: 'মরিয়ম বেগম', phone: '০১৭১২৩৪৫६৭৮', center: 'শাপলা কেন্দ্র - ০১', branch: 'মিরপুর শাখা', joinDate: '১২ জানু, ২০২৪', loanStatus: 'চলতি লোন: ২৫,০০০', savingsBalance: '৳ ৫০০০', status: 'সক্রিয়', statusType: 'active' },
-    { id: 'M-৭৭১২', name: 'সুমাইয়া আক্তার', initial: 'সু', spouseName: 'মো: রফিক', phone: '০১৯৮৭৬৫ND৩২', center: 'জুঁই কেন্দ্র - ০৫', branch: 'উত্তরা শাখা', joinDate: '০৫ মার্চ, ২০২৩', loanStatus: 'কোন লোন নেই', savingsBalance: '৳ ১২,০০০', status: 'সক্রিয়', statusType: 'active' },
-    { id: 'M-১০৫২', name: 'মো: হাসান আলী', initial: 'হা', spouseName: 'ফাতেমা খাতুন', phone: '০১৫৫৫১১২২৩৩', center: 'শাপলা কেন্দ্র - ০১', branch: 'মিরপুর শাখা', joinDate: '২০ নভেম্বর, ২০২৩', loanStatus: 'বকেয়া কিস্তি: ৩,৫০০', savingsBalance: '৳ ৪,৫০০', status: 'বকেয়া', statusType: 'due' },
-    { id: 'M-১৯৫৬', name: 'শফিক উদ্দিন', initial: 'শ', spouseName: 'পারভীন আক্তার', phone: '০১৮৪৪৩৩২২১১', center: 'গোলাপ কেন্দ্র - ১২', branch: 'সাভার শাখা', joinDate: '০১ জুন, ২০২২', loanStatus: 'ক্লোজড', savingsBalance: '৳ ৮০০', status: 'নিষ্ক্রিয়', statusType: 'inactive' },
-  ]);
+  // Mock Data: Initial Members Dataset
+  const [members, setMembers] = useState<Member[]>(initialMembersData);
 
-  // Handler to add a new member dynamically
+
   const handleAddMember = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMember.name || !newMember.phone) return;
@@ -106,8 +92,7 @@ const MembersPage = () => {
     };
 
     setMembers([addedMember, ...members]);
-    setIsModalOpen(false); // Close Modal
-    // Reset form
+    setIsModalOpen(false);
     setNewMember({
       name: '',
       spouseName: '',
@@ -120,13 +105,10 @@ const MembersPage = () => {
     });
   };
 
-  // Handler to open the View Details Modal
   const handleViewDetails = (member: Member) => {
-    setSelectedMember(member);
-    setIsViewModalOpen(true);
+    router.push(`/MembersPage/${member.id}`);
   };
 
-  // Handler to open Edit Modal with current data
   const handleOpenEditModal = (member: Member) => {
     setEditFormData({
       id: member.id,
@@ -141,7 +123,6 @@ const MembersPage = () => {
     setIsEditModalOpen(true);
   };
 
-  // Handler to save updated member data
   const handleEditMemberSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setMembers(members.map(member => {
@@ -166,13 +147,11 @@ const MembersPage = () => {
     setIsEditModalOpen(false);
   };
 
-  // Handler to trigger delete confirmation
   const handleOpenDeleteModal = (member: Member) => {
     setMemberToDelete(member);
     setIsDeleteModalOpen(true);
   };
 
-  // Handler to perform delete execution
   const handleDeleteMember = () => {
     if (memberToDelete) {
       setMembers(members.filter(m => m.id !== memberToDelete.id));
@@ -181,7 +160,6 @@ const MembersPage = () => {
     }
   };
 
-  // Dynamic Search and Filter Matrix Logic
   const filteredMembers = members.filter(member => {
     const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           member.id.includes(searchQuery) || 
@@ -195,9 +173,9 @@ const MembersPage = () => {
   });
 
   return (
-    <div className="space-y-6 p-4 md:p-6 lg:p-8 max-w-(screen-2xl) mx-auto w-full box-border">
+    <div className="space-y-6 p-4 md:p-6 lg:p-8 max-w-screen-2xl mx-auto w-full box-border">
       
-      {/* ================= HEADER SECTION ================= */}
+      {/* Header Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 pb-2">
         <div className="space-y-1 max-w-2xl">
           <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -209,14 +187,14 @@ const MembersPage = () => {
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center justify-center gap-2 bg-[#0c2483] hover:bg-[#0a1e6e] text-white px-5 py-3 rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-lg w-full sm:w-auto shrink-0 group dynamic-btn"
+          className="flex items-center justify-center gap-2 bg-[#0c2483] hover:bg-[#0a1e6e] text-white px-5 py-3 rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-lg w-full sm:w-auto shrink-0 group"
         >
           <UserPlus size={18} className="group-hover:scale-110 transition-transform" />
           <span>নতুন সদস্য অন্তর্ভুক্ত করুন</span>
         </button>
       </div>
 
-      {/* ================= COUNTER METRICS CARDS ================= */}
+      {/* Counter Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center gap-4 hover:border-emerald-200 transition-all">
           <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0"><UserCheck size={24} /></div>
@@ -247,7 +225,7 @@ const MembersPage = () => {
         </div>
       </div>
 
-      {/* ================= SEARCH & CONTROLS ================= */}
+      {/* Search & Controls */}
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4">
         <div className="flex items-center bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 w-full md:w-96 transition-all focus-within:border-[#0c2483] focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100">
           <Search size={18} className="text-slate-400 mr-2 shrink-0" />
@@ -260,7 +238,7 @@ const MembersPage = () => {
           />
         </div>
 
-        <div className="flex gap-1 overflow-x-auto whitespace-nowrap bg-slate-50 p-1.5 rounded-xl border border-slate-200/60 scrollbar-none snap-x">
+        <div className="flex gap-1 overflow-x-auto whitespace-nowrap bg-slate-50 p-1.5 rounded-xl border border-slate-200/60">
           {[
             { id: 'All', label: 'সকল সদস্য' },
             { id: 'Active', label: 'সক্রিয়' },
@@ -270,7 +248,7 @@ const MembersPage = () => {
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all snap-mini ${
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
                 statusFilter === tab.id
                   ? 'bg-white text-[#0c2483] shadow-sm font-extrabold'
                   : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100/50'
@@ -282,8 +260,7 @@ const MembersPage = () => {
         </div>
       </div>
 
-      {/* ================= MEMBERS DIRECTORY DATA LEAOUT ================= */}
-      {/* 1. Mobile & Tablet Friendly Card Grid (Hidden on Desktop) */}
+      {/* Mobile Card View */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:hidden">
         {filteredMembers.length > 0 ? (
           filteredMembers.map((member) => (
@@ -344,7 +321,7 @@ const MembersPage = () => {
         )}
       </div>
 
-      {/* 2. Professional Data Table (Visible on Desktop Screen) */}
+      {/* Desktop Table View */}
       <div className="hidden md:block bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse whitespace-nowrap">
@@ -358,19 +335,21 @@ const MembersPage = () => {
                 <th className="p-4">ঋণ অবস্থা</th>
                 <th className="p-4 text-center">স্ট্যাটাস</th>
                 <th className="p-4 text-center">অ্যাকশন</th>
-              </tr>
+               </tr>
             </thead>
             <tbody className="text-xs divide-y divide-slate-50 font-medium">
               {filteredMembers.length > 0 ? (
                 filteredMembers.map((member) => (
                   <tr key={member.id} className="hover:bg-slate-50/40 transition-colors">
-                    <td className="p-4 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-indigo-50 text-[#0c2483] flex items-center justify-center font-bold text-xs shrink-0">
-                        {member.initial}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-bold text-slate-800 text-sm truncate">{member.name}</p>
-                        <p className="text-[10px] text-slate-400 mt-0.5">ID: {member.id}</p>
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-indigo-50 text-[#0c2483] flex items-center justify-center font-bold text-xs shrink-0">
+                          {member.initial}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-bold text-slate-800 text-sm truncate">{member.name}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">ID: {member.id}</p>
+                        </div>
                       </div>
                     </td>
                     <td className="p-4 text-slate-600 font-semibold truncate">{member.spouseName}</td>
@@ -428,108 +407,10 @@ const MembersPage = () => {
         </div>
       </div>
 
-      {/* ================= MEMBER DETAILS VIEW MODAL ================= */}
-      {isViewModalOpen && selectedMember && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 overflow-hidden my-auto max-h-[calc(100vh-2rem)] flex flex-col">
-            <div className="bg-gradient-to-r from-[#0c2483] to-[#1a3bb5] text-white p-5 relative shrink-0">
-              <button 
-                onClick={() => setIsViewModalOpen(false)}
-                className="absolute top-4 right-4 text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
-              >
-                <X size={18} />
-              </button>
-              <div className="flex items-center gap-3 mt-2">
-                <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md text-white flex items-center justify-center font-bold text-base border border-white/20 shrink-0">
-                  {selectedMember.initial}
-                </div>
-                <div className="min-w-0">
-                  <h3 className="text-base font-bold truncate">{selectedMember.name}</h3>
-                  <p className="text-white/70 text-[11px] mt-0.5">سদস্য আইডি: {selectedMember.id}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-5 space-y-4 text-xs font-semibold overflow-y-auto flex-1">
-              <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100">
-                <span className="text-slate-500">অ্যাকাউন্ট স্ট্যাটাস</span>
-                <span className={`px-2.5 py-0.5 rounded-full font-bold text-[10px] ${
-                  selectedMember.statusType === 'active' ? 'bg-emerald-50 text-emerald-600' :
-                  selectedMember.statusType === 'due' ? 'bg-red-50 text-red-500' : 'bg-slate-100 text-slate-500'
-                }`}>
-                  {selectedMember.status}
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-slate-900 pb-1.5 border-b border-slate-100">
-                  <User size={14} className="text-[#0c2483]" />
-                  <span className="font-extrabold text-slate-800">ব্যক্তিগত ও কেন্দ্র বিবরণ</span>
-                </div>
-                <div className="grid grid-cols-2 gap-3 font-medium text-slate-600">
-                  <div className="min-w-0">
-                    <p className="text-slate-400 text-[11px]">স্বামী/পিতার নাম</p>
-                    <p className="text-slate-800 font-bold mt-0.5 truncate">{selectedMember.spouseName}</p>
-                  </div>
-                  <div>
-                    <p className="text-slate-400 text-[11px]">মোবাইল নাম্বার</p>
-                    <p className="text-slate-800 font-bold mt-0.5">{selectedMember.phone}</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-slate-400 text-[11px]">নিবন্ধিত কেন্দ্র</p>
-                    <p className="text-slate-800 font-bold mt-0.5 truncate">{selectedMember.center}</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-slate-400 text-[11px]">শাখা অফিস</p>
-                    <p className="text-slate-800 font-bold mt-0.5 truncate">{selectedMember.branch}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center gap-2 text-slate-900 pb-1.5 border-b border-slate-100">
-                  <Wallet size={14} className="text-[#0c2483]" />
-                  <span className="font-extrabold text-slate-800">আর্থিক স্থিতি লেজার</span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="bg-indigo-50/50 border border-indigo-100/50 p-2.5 rounded-xl">
-                    <p className="text-slate-500 text-[11px]">মোট সঞ্চয় ব্যালেন্স</p>
-                    <p className="text-[#0c2483] text-sm font-extrabold mt-0.5">{selectedMember.savingsBalance}</p>
-                  </div>
-                  <div className={`p-2.5 rounded-xl border ${
-                    selectedMember.statusType === 'due' ? 'bg-red-50/50 border-red-100' : 'bg-slate-50 border-slate-100'
-                  }`}>
-                    <p className="text-slate-500 text-[11px]">ঋণের বর্তমান অবস্থা</p>
-                    <p className={`text-xs font-extrabold mt-0.5 truncate ${
-                      selectedMember.statusType === 'due' ? 'text-red-600' : 'text-slate-700'
-                    }`}>{selectedMember.loanStatus}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-1.5 text-slate-400 font-medium pt-2 text-[11px]">
-                <Calendar size={12} />
-                <span>ভর্তির তারিখ: {selectedMember.joinDate}</span>
-              </div>
-
-              <div className="pt-2 shrink-0">
-                <button 
-                  type="button"
-                  onClick={() => setIsViewModalOpen(false)}
-                  className="w-full bg-[#0c2483] hover:bg-[#0a1e6e] text-white py-3 rounded-xl font-bold transition-all text-center text-sm shadow-xs"
-                >
-                  বন্ধ করুন
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ================= EDIT MEMBER MODAL ================= */}
+      {/* Edit Member Modal */}
       {isEditModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 my-auto max-h-[calc(100vh-2rem)] flex flex-col">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 my-auto max-h-[calc(100vh-2rem)] flex flex-col">
             <div className="flex justify-between items-center p-5 border-b border-slate-100 shrink-0">
               <h3 className="text-base font-bold text-slate-900">সদস্য তথ্য সংশোধন (Edit Profile)</h3>
               <button 
@@ -621,10 +502,10 @@ const MembersPage = () => {
         </div>
       )}
 
-      {/* ================= DELETE CONFIRMATION MODAL ================= */}
+      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && memberToDelete && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-200 text-center my-auto">
+          <div className="bg-white rounded-2xl max-w-sm w-full shadow-2xl border border-slate-100 p-6 text-center my-auto">
             <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-3">
               <Trash2 size={24} />
             </div>
@@ -650,10 +531,10 @@ const MembersPage = () => {
         </div>
       )}
 
-      {/* ================= CREATIVE INPUT DIALOG MODAL ================= */}
+      {/* Add Member Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 my-auto max-h-[calc(100vh-2rem)] flex flex-col">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 my-auto max-h-[calc(100vh-2rem)] flex flex-col">
             <div className="flex justify-between items-center p-5 border-b border-slate-100 shrink-0">
               <h3 className="text-base font-bold text-slate-900">নতুন সদস্য ফরম</h3>
               <button 
@@ -761,6 +642,4 @@ const MembersPage = () => {
 
     </div>
   );
-};
-
-export default MembersPage;
+}

@@ -149,6 +149,7 @@ interface SidebarProps {
 const menu = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/DashboardOverview" },
   { label: "Members", icon: Users, href: "/MembersPage" },
+  { label: "page", icon: Users, href: "/id" },
   { label: "Loans", icon: CreditCard, href: "/LoansPage" },
   { label: "Accounting", icon: Wallet, href: "/AccountPage" },
   { label: "Reports", icon: FileText, href: "/ReportsPage" },
